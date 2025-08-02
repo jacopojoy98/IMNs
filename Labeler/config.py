@@ -4,7 +4,7 @@ import os
 
 @dataclass
 class RunParameters:
-    name :str = "2025-08-01-15-14"     #The synthetic dataset name
+    name :str = "2025-08-01-12-25"     #The synthetic dataset name
     Dimension: str = str(30)           #The latent dimension of the synthetic dataset
     method: str = "NF"                 #The generative method used to create the synthetic dataset
     
