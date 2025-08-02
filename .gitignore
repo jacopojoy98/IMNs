@@ -2,6 +2,6 @@
 Data/
 DBG/
 Results/
+Labeler/Stratified_data/
 *.pt
-*.json
 *.pyc

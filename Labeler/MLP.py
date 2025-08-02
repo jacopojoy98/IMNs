@@ -7,7 +7,8 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
-import Labeler.Loader as Loader
+import Loader as Loader
+import shutil
 
 class MLP(nn.Module):
     def __init__(self,num_labels):
@@ -39,7 +40,6 @@ def printout(out):
             else:
                 p[i][j] = 0
     print(p)
-
 
 def calculate_statistics(conf_matrix):
     if isinstance(conf_matrix, list):
@@ -94,19 +94,17 @@ def groupreset(a):
         e.reset() 
 
 
-percentages = [0,20,40,60,80,100]
-Num_labelss = [13]
-EPOCHS = 700
-LR = 1e-4
-def gnn(name, Num_labels, root=None):
+def gnn(args):
     DATA_DIR = "/home/jcolombini/Purpose/Labeler/Labeler/Stratified_data"
-    savedir = "Results/Labeler_results/"+name[-4:]+"MLP"+datetime.now().strftime('%Y-%m-%d-%H-%M')+"E="+str(EPOCHS)+"_LR="+str(LR)+"_NL="+str(Num_labels)
-    # savedir = "Results/Labeler_results/MLP2025-03-18-00-47E=3000_LR=0.0001"
+
+    os.makedirs(args.savedir, exist_ok = True)
+    shutil.copy("/home/jcolombini/Purpose/Labeler/Labeler/config.py" ,os.path.join(args.savedir,"config.py"))
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    for percentage in percentages:
+    for percentage in args.percentages:
         for fold in range(10):
             test = []
-            for graph in torch.load(DATA_DIR+"/"+name+"/stratum-"+str(fold)+"real_"+str(Num_labels)+".pt") :
+            for graph in torch.load(DATA_DIR+"/"+args.name+"/stratum-"+str(fold)+"real_"+str(args.Num_labels)+".pt") :
                 test.append((torch.tensor(graph[0]).to(device), torch.tensor(graph[1]).to(device)))
 
             train=[]
@@ -114,18 +112,17 @@ def gnn(name, Num_labels, root=None):
                 if s==fold:
                     continue
                 else:
-                    for graph in torch.load(DATA_DIR+"/"+name+"/stratum-"+str(fold)+"real_"+str(Num_labels)+".pt"):
+                    for graph in torch.load(DATA_DIR+"/"+args.name+"/stratum-"+str(fold)+"real_"+str(args.Num_labels)+".pt"):
                         train.append((torch.tensor(graph[0]).to(device), torch.tensor(graph[1]).to(device)))
 
             for i in range(percentage//10):
-                for graph in torch.load(DATA_DIR+"/"+name+"/stratum-"+str(fold)+"gen_"+str(Num_labels)+".pt"):
+                for graph in torch.load(DATA_DIR+"/"+args.name+"/stratum-"+str(fold)+"gen_"+str(args.Num_labels)+".pt"):
                     train.append((torch.tensor(graph[0]).to(device), torch.tensor(graph[1]).to(device)))
-            os.makedirs(savedir, exist_ok = True)
 
-            #device=torch.device('cpu')
-            modelmsp = MLP(Num_labels).to(device)
 
-            optimizer = torch.optim.Adam(modelmsp.parameters(), lr=LR)
+            modelmsp = MLP(args.Num_labels).to(device)
+
+            optimizer = torch.optim.Adam(modelmsp.parameters(), lr=args.LR)
             los = torch.nn.BCELoss(reduction='sum')
 
             losses = []
@@ -133,15 +130,15 @@ def gnn(name, Num_labels, root=None):
             Accuracies = []
             Recalls = []
             Precisions = []
-            square = np.zeros((Num_labels,Num_labels))
+            square = np.zeros((args.Num_labels,args.Num_labels))
 
-            for epoch in range(EPOCHS):
+            for epoch in range(args.Epochs):
                 modelmsp.train()
                 loss_sum = 0
                 for i, (label, data) in enumerate(train):
                     out= []
                     optimizer.zero_grad()
-                    target = F.one_hot(label, num_classes=Num_labels).type(torch.float32)
+                    target = F.one_hot(label, num_classes=args.Num_labels).type(torch.float32)
                     for j in range(len(data[0])):
                         padded_data = F.pad(data,(0,32-len(data), 0, 32-len(data)))
                         tmp_out = modelmsp(padded_data.type(torch.float32)).sigmoid()
@@ -152,10 +149,7 @@ def gnn(name, Num_labels, root=None):
                     loss.backward()
                     optimizer.step()
                     loss_sum += loss.item()
-                    # if i==len(train)-1:
-                    #     print(f"loss={loss.item()}")
-                    #     print(f"out={out}")
-                    #     print(f"target={target}")
+
                 modelmsp.eval()
                 testloss_sum =0 
                 for (labels, test_) in test:
@@ -168,7 +162,7 @@ def gnn(name, Num_labels, root=None):
                         out.append(tmp_out)
                         test_ = shift_tensor(test_)
                     out = torch.stack(out)
-                    targettest =  F.one_hot(labels, num_classes = Num_labels).type(torch.float32)
+                    targettest =  F.one_hot(labels, num_classes = args.Num_labels).type(torch.float32)
                     loss = los(out,targettest)
                     testloss_sum +=  loss.item()                    
                     ii = torch.argmax(out,  dim = 1)
@@ -188,23 +182,20 @@ def gnn(name, Num_labels, root=None):
                 print(f"epoch: {epoch}\t- loss:  {loss_sum/len(train)} \n         \t- tloss: {testloss_sum/len(test)} \n         \t- accuracy: {Accuracy}\
                        \n         \t- Recall: {np.mean(Recall)} \n         \t- Precision: {np.mean(Precision)}")
 
-            plot(losses, "trainlosses", percentage, savedir)
-            plot(testlosses, "testlosses", percentage, savedir)
-            plot(Accuracies, "accuracy", percentage, savedir)
-            Multiple_plot(Recalls, "Recall", percentage, savedir)
-            Multiple_plot(Precisions, "Precision", percentage, savedir)
+            plot(losses, "trainlosses", percentage, args.savedir)
+            plot(testlosses, "testlosses", percentage, args.savedir)
+            plot(Accuracies, "accuracy", percentage, args.savedir)
+            Multiple_plot(Recalls, "Recall", percentage, args.savedir)
+            Multiple_plot(Precisions, "Precision", percentage, args.savedir)
 
-
-            np.savetxt(savedir + "//testloss.txt", testlosses )
-            np.savetxt(savedir + "//trainloss.txt", losses )
-            np.savetxt(savedir + "//Accuracy"+str(percentage)+"f"+str(fold)+".txt", Accuracies )
-            np.savetxt(savedir + "//Recall"+str(percentage)+"f"+str(fold)+".txt", Recalls)
-            np.savetxt(savedir + "//Precision"+str(percentage)+"f"+str(fold)+".txt", Precisions)
+            np.savetxt(args.savedir + "//testloss.txt", testlosses )
+            np.savetxt(args.savedir + "//trainloss.txt", losses )
+            np.savetxt(args.savedir + "//Accuracy"+str(percentage)+"f"+str(fold)+".txt", Accuracies )
+            np.savetxt(args.savedir + "//Recall"+str(percentage)+"f"+str(fold)+".txt", Recalls)
+            np.savetxt(args.savedir + "//Precision"+str(percentage)+"f"+str(fold)+".txt", Precisions)
 
 if __name__ == "__main__":
-    for name in ["2025-04-01-00-1650data_NF","2025-04-01-00-1650data_wgan"]:
-        for Num_labels in [3]:
-            gnn(name, Num_labels)
+    pass
     # dir = os.curdir
     # for x in percentages:
     #     arr = np.loadtxt(dir+"//dgb//precision"+str(x)+".txt")

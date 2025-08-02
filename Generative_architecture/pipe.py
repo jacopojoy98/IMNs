@@ -30,12 +30,10 @@ def train_models(args):
     return None
 
 args = RunParameters()
-args.name = os.path.join(RESULTS_DIRECTORY, "2025-08-01-12-25")
+args.name = os.path.join(RESULTS_DIRECTORY, "2025-08-01-15-14")
 args.Epochs_NF = 300
 args.RAE = False
-args.WGAN = False
-args.End_to_end_NF=False
-args.End_to_end_Wgan=False
+args.NF = False
 train_models(args)
 Syth(args, 4000)
 Analisis.Evaluate(args.name)

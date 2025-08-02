@@ -9,18 +9,21 @@ from Folds import group_kfold_with_distribution, extract_subdatasets
 
 Generative_results_directory = "/home/jcolombini/Purpose/Labeler/Results/Generative_results"
 
-Percentages = [0,10,20,30,40,50,60,70,80,90,100,110]
 
-def stratify(name, best_model_data, Num_classes):
+
+def stratify(args):
     sgkf = StratifiedGroupKFold(n_splits=10)
-    working_directory = os.path.join(Generative_results_directory, name)
+    working_directory = os.path.join(Generative_results_directory, args.name)
+
+    best_model_data = os.path.join(args.Dimension, "data_"+args.method+".pt")
+
     bmd = best_model_data.replace("/","")[:-3]
-    saving_directory = "/home/jcolombini/Purpose/Labeler/Labeler/Stratified_data/" + name + bmd
+    saving_directory = "/home/jcolombini/Purpose/Labeler/Labeler/Stratified_data/" + args.name 
     if not os.path.isdir(saving_directory):
         os.mkdir(saving_directory)
     # for Num_labels in Num_labelss:
-    DATA_r = Load(os.path.join(working_directory,"testset.pt"), Num_classes)
-    DATA_g = Load(os.path.join(working_directory, best_model_data), Num_classes)
+    DATA_r = Load(os.path.join(working_directory,"testset.pt"), args.Num_classes)
+    DATA_g = Load(os.path.join(working_directory, best_model_data), args.Num_classes)
     collective_labels=[]
     collective_r_groups=[]
 
@@ -29,11 +32,11 @@ def stratify(name, best_model_data, Num_classes):
             collective_r_groups.append(j)
             collective_labels.append(a)
 
-    s = sgkf.split(X=np.zeros((len(collective_labels),Num_classes)), y=collective_labels, groups=collective_r_groups)
+    s = sgkf.split(X=np.zeros((len(collective_labels),args.Num_classes)), y=collective_labels, groups=collective_r_groups)
 
     for t,b in enumerate(s):
         fold = list(set([collective_r_groups[i] for i in b[1] ]))
-        torch.save([DATA_r[b] for b in fold], saving_directory+"/stratum-"+str(t)+"real_"+str(Num_classes)+".pt")
+        torch.save([DATA_r[b] for b in fold], saving_directory+"/stratum-"+str(t)+"real_"+str(args.Num_classes)+".pt")
     
     distrib = dict([(i,collective_labels.count(i)/len(collective_labels)) for i in range(13)])
 
@@ -44,9 +47,9 @@ def stratify(name, best_model_data, Num_classes):
     s = extract_subdatasets(generated_data_groupings,"group","label", 140 ,distrib)
     
     for t, stratum in enumerate(s[:10]):
-        torch.save([DATA_g[i] for i in stratum], saving_directory+"/stratum-"+str(t)+"gen_"+str(Num_classes)+".pt")
+        torch.save([DATA_g[i] for i in stratum], saving_directory+"/stratum-"+str(t)+"gen_"+str(args.Num_classes)+".pt")
 
 
 if __name__ == "__main__":
-    name = "2025-04-01-00-16"
-    stratify(name, "50/data_wgan.pt", 3)
+    name = "2025-08-01-12-25"
+    stratify(name, "20/data_NF.pt", 13)

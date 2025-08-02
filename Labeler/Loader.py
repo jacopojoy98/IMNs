@@ -10,7 +10,7 @@ def Load(file, Num_classes):
     matrices = torch.load(file, weights_only=True)
     out = []
     for matrix in matrices:
-        matrix = matrix.detach().numpy()
+        matrix = matrix.detach().cpu().numpy()
         NN = Number_of_nodes_of_graph_from_matrix(matrix)  ### Modificare su torch.quantile e usare torch invece che numpy
         purpose = np.argmax(matrix[:13], axis=0)[:NN]       #  torch.quantile(tensor, 0.9, "linear")
         purpose = [min(p, Num_classes - 1) for p in purpose]
