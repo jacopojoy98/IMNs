@@ -40,8 +40,8 @@ def Create_Graph_from_tuple(data_tuple):
 
 def Create_Graph(GraphMatrix):
     NN = Number_of_nodes_of_graph_from_matrix(GraphMatrix)
-    purpose = np.argmax(GraphMatrix[:13], axis=0)
-    Omega = GraphMatrix[13:13+NN,:NN]
+    purpose = np.argmax(GraphMatrix[:10], axis=0)
+    Omega = GraphMatrix[10:10+NN,:NN]
     # threshold = np.percentile(Omega, 90) / 2  ### VIP
     threshold = 0.05
     G = nx.DiGraph()
@@ -57,9 +57,9 @@ def Create_Graph(GraphMatrix):
 
 def Number_of_nodes_of_graph_from_matrix(matrix):
     if isinstance(matrix, torch.Tensor):
-        tmppurp =  np.sum(matrix[:13].detach().numpy(), axis=0)
+        tmppurp =  np.sum(matrix[:10].detach().numpy(), axis=0)
     else:
-        tmppurp = np.sum(matrix[:13], axis=0)
+        tmppurp = np.sum(matrix[:10], axis=0)
     purpTresh = np.percentile(tmppurp, 90) / 2  ###VIP
     estimated_nodes = np.sum(tmppurp > purpTresh)
     return estimated_nodes
@@ -104,8 +104,8 @@ def discard_matrix(matrix):
         matrix = matrix.detach().numpy()
     c1 = 0
     c2 = 0
-    purposes = matrix[:13]
-    adjacency = matrix[13:]
+    purposes = matrix[:10]
+    adjacency = matrix[10:]
     sum_p = np.sum(purposes , axis = 0)
     diff_p = [min(abs(x-0),abs(x-1)) for x in sum_p]
     if np.sum(diff_p) > 2:

@@ -148,7 +148,7 @@ def train_wgans(args):
 def end_to_end_Wgan(args):
     cuda = torch.cuda.is_available()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    START_DIM = 32*(32+13)
+    START_DIM = 32*(32+args.Num_classes)
     train_dataset = torch.stack([X.view(START_DIM).float().to(device) for X in torch.load('trainset.pt', weights_only=False)])
     test_dataset = torch.stack([X.view(START_DIM).float().to(device) for X in torch.load('testset.pt', weights_only=False)])
     if not os.path.exists("ETE"):

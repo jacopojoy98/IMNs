@@ -12,7 +12,7 @@ def fileread(filename):
     return matrix
 
 def unpack_matrix(purposes, matrix, unpack_method = "tuple"):
-    purposes = F.one_hot(torch.tensor(purposes), num_classes = 13).transpose(1,0).type(torch.float32)
+    purposes = F.one_hot(torch.tensor(purposes), num_classes = 10).transpose(1,0).type(torch.float32)
     purposes = F.pad(purposes,(0,32-len(purposes[0])))
                                         ### ATTENZIONE A QUESTO 32
     structure = F.pad(torch.tensor(matrix),(0,32-len(matrix[0]),0,32-len(matrix)))

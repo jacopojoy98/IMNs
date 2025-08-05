@@ -60,7 +60,7 @@ def train_NF(args):
 
 def end_to_end_NF(args):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    START_DIM = 32*(32+13)
+    START_DIM = 32*(32+args.Num_classes)
     model = Normalizing_Flow(config.NUM_ETE_FLOW_LAYESRS, START_DIM).to(device)
     dataset = torch.stack([X.view(START_DIM).float().to(device) for X in torch.load('trainset.pt',weights_only=False)])
     testset = torch.stack([X.view(START_DIM).float().to(device) for X in torch.load('testset.pt', weights_only=False)])

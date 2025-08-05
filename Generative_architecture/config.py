@@ -2,18 +2,18 @@ from dataclasses import dataclass
 from datetime import datetime
 import os
 
-DATASET = "TMD"
-# DATASET = "NHTS"
+# DATASET = "TMD"
+DATASET = "NHTS"
 
 ## Run parameters
 RESULTS_DIRECTORY   = "/home/jcolombini/Purpose/Labeler/Results/Generative_results"
 LATENT_DIMENSIONS   = (10,20,30,40,50)
-NUMBER_OF_CLASSES   = 13
+NUMBER_OF_CLASSES   = 10
 IMG_SIZE            = 32
 BATCH_SIZE          = 8
 DATA_DIRECTORY      = "/home/jcolombini/Purpose/Labeler/Data"
 
-EPOCHS              = (3000, 3000, 300)
+EPOCHS              = (5000, 5000, 300)
 LEARNING_RATE       = (1e-4, 2e-4, 1e-4)
 ALPHA               = 3e-4
 
@@ -61,6 +61,7 @@ class RunParameters:
     data_directory: str = os.path.join(DATA_DIRECTORY, DATASET)
     Batch_size: int = BATCH_SIZE
     Datset : str = DATASET
+    Num_classes : int = NUMBER_OF_CLASSES
 
     RAE: bool = 1
     Epochs_Rae: int = RAE_EPOCHS

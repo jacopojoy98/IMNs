@@ -103,5 +103,4 @@ def Syth(args, size=4000):
     torch.save(data, "data_ete_Wgan.pt")
     
 if __name__ == "__main__":
-    path = "/home/jcolombini/Purpose/Labeler/Results/Generative_results/2025-02-17-EPOCHS(1000, 1500, 200)-LR(0.0002, 0.0003, 0.0001)-ALPHA0.0003NUM_CLSS13"
-    Syth(path)
+    pass

@@ -54,14 +54,14 @@ class RAE(nn.Module):
             l2 += p.pow(2).sum()
         return l2 + (0.5 * z.pow(2).sum())
 
-def train(epoch, model, optimizer, train_loader, device, IMG_H, IMG_W, ALPHA):
+def train(epoch, model, optimizer, train_loader, device, IMG_H, IMG_W, ALPHA, number_of_classes):
     model.train()
     train_loss = 0
     for batch_idx, data in enumerate(train_loader):
         data = data
         optimizer.zero_grad()
         recon_batch, reg = model(data)
-        loss = F.binary_cross_entropy(recon_batch, data.view(-1, IMG_H*(IMG_W+13)), reduction="sum") + ALPHA * reg
+        loss = F.binary_cross_entropy(recon_batch, data.view(-1, IMG_H*(IMG_W+number_of_classes)), reduction="sum") + ALPHA * reg
         loss.backward()
         train_loss += loss.item()
         optimizer.step()
@@ -69,14 +69,14 @@ def train(epoch, model, optimizer, train_loader, device, IMG_H, IMG_W, ALPHA):
         print('====> Epoch: {} Average loss: {:.4f}'.format(epoch, train_loss / len(train_loader.dataset)))    
     return train_loss / len(train_loader.dataset)
 
-def test(model, test_loader, device,IMG_H, IMG_W, ALPHA):
+def test(model, test_loader, device,IMG_H, IMG_W, ALPHA, number_of_classes):
     model.eval()
     test_loss = 0
     with torch.no_grad():
         for i, data in enumerate(test_loader):
             data = data
             recon_batch, reg = model(data)
-            loss = F.binary_cross_entropy(recon_batch, data.view(-1, IMG_H*(IMG_W+13)), reduction="sum") + ALPHA * reg
+            loss = F.binary_cross_entropy(recon_batch, data.view(-1, IMG_H*(IMG_W+number_of_classes)), reduction="sum") + ALPHA * reg
             test_loss += loss.item()
     print('====> Test set loss: {:.4f}'.format(test_loss / len(test_loader.dataset)))
     return test_loss / len(test_loader.dataset)
@@ -154,11 +154,11 @@ def train_raes(args,
         model = RAE(LATENT_DIM, IMG_H, IMG_W).to(device)
         optimizer = optim.Adam(model.parameters(), lr=args.Learning_rate_Rae)
         for epoch in range(1, args.Epochs_Rae + 1):
-            loss = train(epoch, model, optimizer, train_loader, device,IMG_H, IMG_W, args.Alpha)
+            loss = train(epoch, model, optimizer, train_loader, device,IMG_H, IMG_W,  args.Alpha, args.Num_classes)
             if epoch%10==0 :
                 train_loss.append(loss)
             if epoch%40==0:
-                loss = test(model, test_loader, device,IMG_H, IMG_W, args.Alpha)
+                loss = test(model, test_loader, device,IMG_H, IMG_W, args.Alpha, args.Num_classes)
                 test_loss.append(loss)
         save(LATENT_DIM, model, trainset, testset, train_loss, test_loss, start_time, 3, device)
 
