@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from Generative_architecture.GLOBAL_FUNCTIONS import NHTS_purposes_to_TMD
+from Generative_architecture.GLOBAL_FUNCTIONS import NHTS_purposes_to_TMD, TMD_to_TMD_purposes
 
 def fileread(filename):
     with open(filename , "rb") as f:
@@ -32,7 +32,7 @@ def unpack_single_NHTS(username, unpack_method = "tuple"):
     return out
 
 def unpack_single_TMD(username, unpack_method = "tuple"):
-    purposes = [int(p*12) for p in fileread(os.path.join(username, "purposes.pickle"))]
+    purposes = [TMD_to_TMD_purposes(int(p*12)) for p in fileread(os.path.join(username, "purposes.pickle"))]
     omega = fileread(os.path.join(username, "omega.pickle"))
     out = unpack_matrix(purposes, omega, unpack_method)
     return out
@@ -74,6 +74,8 @@ class Extract_Dataset(Dataset):
             IMN = unpack_single_TMD(IMN_path)
         elif os.path.basename(os.path.normpath(self.root_dir)) == "TMD_test": 
             IMN = unpack_single_TMD(IMN_path)  
+        elif os.path.basename(os.path.normpath(self.root_dir)) == "TMD_t": 
+            IMN = unpack_single_TMD(IMN_path)  
         elif os.path.basename(os.path.normpath(self.root_dir)) == "NHTS" :
             IMN = unpack_single_NHTS(IMN_path)
         else:
@@ -85,7 +87,9 @@ class Extract_Dataset(Dataset):
         if os.path.basename(os.path.normpath(self.root_dir)) == "TMD" :
             IMN = unpack_single_TMD(IMN_path, unpack_method = "Tensor")
         elif os.path.basename(os.path.normpath(self.root_dir)) == "TMD_test": 
-            IMN = unpack_single_TMD(IMN_path, unpack_method = "Tensor")  
+            IMN = unpack_single_TMD(IMN_path, unpack_method = "Tensor")
+        elif os.path.basename(os.path.normpath(self.root_dir)) == "TMD_t": 
+            IMN = unpack_single_TMD(IMN_path, unpack_method = "Tensor")
         elif os.path.basename(os.path.normpath(self.root_dir)) == "NHTS" :
             IMN = unpack_single_NHTS(IMN_path, unpack_method = "Tensor")
         else:

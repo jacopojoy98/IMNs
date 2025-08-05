@@ -1,32 +1,70 @@
 import json
 import matplotlib.pyplot as plt
 import torch 
+# 0 Home = 1, 2  
+# 1 Work = 3, 4
+# 2 Study = 8 
+# 3 Food = 13
+# 4 Bring & get = 6, 7
+# 5 Leisure = 16 ,15
+# 6 Social = 5, 17, 19
+# 7 Shopping = 11 , 12
+# 8 Serivces = 18, 9, 10, 14
+# 9 Other = 97,7,-8,-9,
+
+def TMD_to_TMD_purposes(TMD_purpose):
+    if TMD_purpose == 0:
+        return 0
+    if TMD_purpose == 1:
+        return 1
+    if TMD_purpose == 2:
+        return 2
+    if TMD_purpose == 3:
+        return 3
+    if TMD_purpose == 4:
+        return 4
+    if TMD_purpose == 5:
+        return 4
+    if TMD_purpose == 6:
+        return 5
+    if TMD_purpose == 7:
+        return 6
+    if TMD_purpose == 8:
+        return 7
+    if TMD_purpose == 9:
+        return 7
+    if TMD_purpose == 10:
+        return 8
+    if TMD_purpose == 11:
+        return 9
+    if TMD_purpose == 12:
+        return 9
+    else:
+        raise ValueError("Unknown TMD purpose: {}".format(TMD_purpose))
 
 def NHTS_purposes_to_TMD (NHTS_purpose):
     if NHTS_purpose == 1 or NHTS_purpose == 2:
         return 0
-    if NHTS_purpose == 3 or NHTS_purpose == 4 or NHTS_purpose == 5:
+    if NHTS_purpose == 3 or NHTS_purpose == 4:
         return 1
-    if NHTS_purpose == 6:
-        return 6
-    if NHTS_purpose == 7 or NHTS_purpose == 9 or NHTS_purpose == 97:
-        return 3
-    if NHTS_purpose == 8 or NHTS_purpose == 14 or NHTS_purpose == 17 or NHTS_purpose == 19:
+    if NHTS_purpose == 8:
         return 2
-    if NHTS_purpose == 10:
-        return 7
-    if NHTS_purpose == 11:
-        return 8
-    if NHTS_purpose == 12:
-        return 10
     if NHTS_purpose == 13:
-        return 5
-    if NHTS_purpose == 15 or NHTS_purpose == 16:
+        return 3
+    if NHTS_purpose == 6 or NHTS_purpose == 7:
         return 4
-    if NHTS_purpose == 18:
+    if NHTS_purpose == 16 or NHTS_purpose == 15:
+        return 5
+    if NHTS_purpose == 5 or NHTS_purpose == 17 or NHTS_purpose == 19:
+        return 6
+    if NHTS_purpose == 11 or NHTS_purpose == 12:
+        return 7
+    if NHTS_purpose == 18 or NHTS_purpose == 9 or NHTS_purpose == 10 or NHTS_purpose == 14:
+        return 8
+    if NHTS_purpose == 97 or NHTS_purpose == 7 or NHTS_purpose == -8 or NHTS_purpose == -9:
         return 9
     else:
-        return 0
+        raise ValueError("Unknown NHTS purpose: {}".format(NHTS_purpose))
     
 def save_on_report(filename, name, data):
     with open(filename, "a") as file:
