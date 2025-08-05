@@ -96,9 +96,10 @@ def groupreset(a):
 
 def gnn(args):
     DATA_DIR = "/home/jcolombini/Purpose/Labeler/Labeler/Stratified_data"
-
-    os.makedirs(args.savedir, exist_ok = True)
-    shutil.copy("/home/jcolombini/Purpose/Labeler/Labeler/config.py" ,os.path.join(args.savedir,"config.py"))
+    savedir =  os.path.join("/home/jcolombini/Purpose/Labeler/Results/Labeler_results", args.savedir)
+    if not os.path.exists(savedir):
+        os.makedirs(savedir, exist_ok=True)
+    # shutil.copy("/home/jcolombini/Purpose/Labeler/Labeler/config.py" ,os.path.join(savedir,"config.py"))
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     for percentage in args.percentages:
@@ -182,17 +183,17 @@ def gnn(args):
                 print(f"epoch: {epoch}\t- loss:  {loss_sum/len(train)} \n         \t- tloss: {testloss_sum/len(test)} \n         \t- accuracy: {Accuracy}\
                        \n         \t- Recall: {np.mean(Recall)} \n         \t- Precision: {np.mean(Precision)}")
 
-            plot(losses, "trainlosses", percentage, args.savedir)
-            plot(testlosses, "testlosses", percentage, args.savedir)
-            plot(Accuracies, "accuracy", percentage, args.savedir)
-            Multiple_plot(Recalls, "Recall", percentage, args.savedir)
-            Multiple_plot(Precisions, "Precision", percentage, args.savedir)
+            plot(losses, "trainlosses", percentage, savedir)
+            plot(testlosses, "testlosses", percentage, savedir)
+            plot(Accuracies, "accuracy", percentage, savedir)
+            Multiple_plot(Recalls, "Recall", percentage, savedir)
+            Multiple_plot(Precisions, "Precision", percentage, savedir)
 
-            np.savetxt(args.savedir + "//testloss.txt", testlosses )
-            np.savetxt(args.savedir + "//trainloss.txt", losses )
-            np.savetxt(args.savedir + "//Accuracy"+str(percentage)+"f"+str(fold)+".txt", Accuracies )
-            np.savetxt(args.savedir + "//Recall"+str(percentage)+"f"+str(fold)+".txt", Recalls)
-            np.savetxt(args.savedir + "//Precision"+str(percentage)+"f"+str(fold)+".txt", Precisions)
+            np.savetxt(savedir + "//testloss.txt", testlosses )
+            np.savetxt(savedir + "//trainloss.txt", losses )
+            np.savetxt(savedir + "//Accuracy"+str(percentage)+"f"+str(fold)+".txt", Accuracies )
+            np.savetxt(savedir + "//Recall"+str(percentage)+"f"+str(fold)+".txt", Recalls)
+            np.savetxt(savedir + "//Precision"+str(percentage)+"f"+str(fold)+".txt", Precisions)
 
 if __name__ == "__main__":
     pass

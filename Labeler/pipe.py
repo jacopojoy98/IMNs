@@ -1,12 +1,16 @@
 from Stratify import stratify
 from MLP import gnn
+from Cross_Exam import folded_experiment
 from config import RunParameters
 import os
 from datetime import datetime
 
 args = RunParameters()
-stratify(args)
-for dim in [40,50]:
-    args.Dimension = str(dim)
-    args.savedir = os.path.join("/home/jcolombini/Purpose/Labeler/Results/Labeler_results", datetime.now().strftime('%Y-%m-%d-%H-%M'))
+for N in [2, 3, 6, 13]:
+    args.name = "2025-08-01-12-25"
+    args.Num_classes = N
+    args.Num_labels = N
+    args.savedir = datetime.now().strftime('%Y-%m-%d-%H-%M')
+    stratify(args)
     gnn(args)
+    folded_experiment(args.savedir)

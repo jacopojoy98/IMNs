@@ -5,9 +5,20 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Evaluation.Distances import Distances
 import json
 
-def dst_to_sim(x):
-    return np.e**(-x)
+def dst_to_sim(x, sigma):
+    return np.e**(-np.clip(x,-1,10000)/sigma)
 
+def load_data(data,function_names):
+    for key in function_names:
+        if key not in data:
+            raise Exception("Function name not found in data: " + key)
+        if key == "MMD" or key == "KID" or key == "FID":
+            data[key] = [np.mean([dst_to_sim(a,100) for a in data[key]]), np.sqrt(np.var([dst_to_sim(a,100) for a in data[key]]))]
+        elif key == "Precision" or key == "Recall" or key == "Density" or key == "Coverage" or key == "F1_PR":
+            data[key] = [np.mean([a for a in data[key]]), np.sqrt(np.var([a for a in data[key]]))]
+        else:
+            data[key] = [np.mean([dst_to_sim(a,1) for a in data[key]]), np.sqrt(np.var([dst_to_sim(a,1) for a in data[key]]))]
+    return data
 
 def compared_plot(data_a,data_b,data_c, method, Latent_space, function_name,size):
     plt.hist(np.clip(data_a, -1000, 1000), bins=20, density=True, alpha=0.4, label='TT')
@@ -98,6 +109,8 @@ def plot(name):
     Matrix_functions = Distances.Graph_functions_tasks
     Graph_functions = Distances.Matrix_functions_tasks
     function_names = [f.__name__ for f in Matrix_functions + Graph_functions]
+    function_names += ["MMD","KID","FID","Precision","Recall","Density","Coverage","F1_PR"]
+    # function_names.append('GIN')
     # function_names.remove('Laplacian_spectrum_distance')
     methods = ["NF", "wgan", "rae"]
     total = []
@@ -111,7 +124,8 @@ def plot(name):
                 return None
             with open(str(Latent_dimension)+'/was_results_'+method+'.json', 'r') as file:
                 data = json.load(file)  
-            data = dict([(key, [np.mean([dst_to_sim(a) for a in data[key]]),np.sqrt(np.var([dst_to_sim(a) for a in data[key]]))]) for key in function_names])
+            data = load_data(data, function_names)
+            # data = dict([(key, [np.mean([dst_to_sim(a) for a in data[key]]),np.sqrt(np.var([dst_to_sim(a) for a in data[key]]))]) for key in function_names])
             L_D.append(data)
         total.append(L_D) 
         
@@ -120,7 +134,8 @@ def plot(name):
         with open('ETE/was_results_'+method+'.json', 'r') as file:
             data = json.load(file)   
                             ###############
-            data = dict([(key, [np.mean([dst_to_sim(a) for a in data[key]]),np.sqrt(np.var([dst_to_sim(a) for a in data[key]]))]) for key in function_names])
+            data = load_data(data, function_names)
+            # data = dict([(key, [np.mean([dst_to_sim(a) for a in data[key]]),np.sqrt(np.var([dst_to_sim(a) for a in data[key]]))]) for key in function_names])
         L_D.append(data)
         total.append(L_D) 
 
@@ -186,6 +201,7 @@ if __name__ == "__main__":
     Res_dir = "/home/jcolombini/Purpose/Labeler/Results/Generative_results"
     experiments = os.listdir(Res_dir)
     for j, experiment in enumerate(experiments):
+        experiment = "2025-08-01-15-14"
         dir = os.path.join(Res_dir, experiment)
         plot(dir)
     # pass

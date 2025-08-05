@@ -1,4 +1,5 @@
 .venv/
+Generative_architecture/Evaluation/GIN/.GIN/
 Data/
 DBG/
 Results/
