@@ -18,27 +18,27 @@ def Generate_Data_wgan(rae_model, wgan_model, size, clean):
     z = Variable(torch.FloatTensor(
                     np.random.normal(0, 1, (size, config.INNER_LATENT_DIM))
                     ))
-    data = rae_model.decode(wgan_model(z).detach()).view((size,45,32))
+    data = rae_model.decode(wgan_model(z).detach()).view((size,42,32))
     if clean:
         data = clean_data(data)
     return data
 
-def Generate_Data_rae(rae_model, size, Latent_dimension, clean):
+def Generate_Data_rae(rae_model, size, Latent_dimension, args):
     z = Variable(torch.FloatTensor(
                     np.random.normal(0, 1, (size, Latent_dimension))
                     ))
-    data = rae_model.decode(z).view((size,45,32))
-    if clean:
+    data = rae_model.decode(z).view((size,args.Img_size+args.Num_classes,args.Img_size))
+    if args.clean_data :
         data = clean_data(data)
     return data
 
-def Generate_Data_NF(rae_model, NF_model, size, Latent_dimension, clean):
+def Generate_Data_NF(rae_model, NF_model, size, Latent_dimension, args):
 
     z = Variable(torch.FloatTensor(
                     np.random.normal(0, 1, (size, Latent_dimension))
                     ))
-    data = rae_model.decode(NF_model.forward(z).detach()).view((size,45,32))
-    if clean:
+    data = rae_model.decode(NF_model.forward(z).detach()).view((size,args.Img_size+args.Num_classes,args.Img_size))
+    if args.clean_data:
         data = clean_data(data)
     return data
 
@@ -69,9 +69,9 @@ def Syth(args, size=4000):
                             )
         NF.eval()
 
-        data1 = Generate_Data_rae(Decoder,size, LATENT_DIM, args.clean_data)
-        data2 = Generate_Data_wgan(Decoder, Wgan, size, args.clean_data)
-        data3 = Generate_Data_NF(Decoder, NF, size, LATENT_DIM, args.clean_data)
+        data1 = Generate_Data_rae(Decoder,size, LATENT_DIM, args)
+        data2 = Generate_Data_wgan(Decoder, Wgan, size, args)
+        data3 = Generate_Data_NF(Decoder, NF, size, LATENT_DIM, args)
         torch.save(data1, "data_rae.pt")
         torch.save(data2, "data_wgan.pt")
         torch.save(data3, "data_NF.pt")
@@ -84,7 +84,7 @@ def Syth(args, size=4000):
                                         weights_only=True))
     z = Variable(torch.FloatTensor(
                     np.random.normal(0, 1, (size, dim))))
-    data = NF.forward(z).detach().view((size,45,32))
+    data = NF.forward(z).detach().view((size,args.Img_size+args.Num_classes,args.Img_size))
     if args.clean_data:
         data = clean_data(data)
     torch.save(data, "data_ete_NF.pt")
@@ -97,7 +97,7 @@ def Syth(args, size=4000):
     z = Variable(torch.FloatTensor(
                     np.random.normal(0, 1, (size, config.INNER_LATENT_DIM))
                     ))
-    data = Wgan(z).detach().view((size,45,32))
+    data = Wgan(z).detach().view((size,args.Img_size+args.Num_classes,args.Img_size))
     if args.clean_data:
         data = clean_data(data)
     torch.save(data, "data_ete_Wgan.pt")

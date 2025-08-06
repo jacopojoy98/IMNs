@@ -3,7 +3,10 @@ from Generative_architecture.Evaluation.DataManipulation import Create_Graph, Nu
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-root = "/home/jcolombini/Purpose/Labeler/Data/NHTS"
+import os
+data_path = "/home/jcolombini/Purpose/Labeler/Data"
+dataname = "NHTS"
+root = os.path.join(data_path, dataname)
 dataset = Extract_Dataset(root)
 purposes = []
 Number_of_nodes = [] 
@@ -25,45 +28,55 @@ for data in dataset:
         purposes.append(e)
     Number_of_nodes.append(NN)
 
-plt.hist(purposes,bins=np.arange(0, 13), align='left', rwidth=0.8)
+plt.rcParams['font.family'] = 'serif'
+
+plt.hist(purposes,bins=np.arange(0, 11), align='left', rwidth=0.8, color='lightcoral', alpha=0.6)
 plt.title("Purpose distribution")
-plt.xlabel("Purpose")
 plt.ylabel("Count")
-plt.savefig("Purpose_distribution.png")
+plt.xticks(np.arange(0, 10),[ "home", "working", "education","food", "bring&get", "leisure","social", "shopping", "services",  "other"], rotation=45)
+plt.grid(True, axis='y', linestyle=':', linewidth=0.5)
+plt.tight_layout()
+plt.savefig("Purpose_distribution_"+dataname+".png")
 plt.close()
 
-plt.hist(Number_of_nodes, bins=np.arange(0, max(Number_of_nodes)+1), align='left', rwidth=0.8)
+plt.hist(Number_of_nodes, bins=np.arange(min(Number_of_nodes), max(Number_of_nodes)+1), align='left', rwidth=0.8, color='lightcoral', alpha=0.6)
 plt.title("Number of nodes distribution")
 plt.xlabel("Number of nodes")
-plt.savefig("Number_of_nodes_distribution.png")
+plt.grid(True, axis='y', linestyle=':', linewidth=0.5)
+plt.savefig("Number_of_nodes_distribution_"+dataname+".png")
 plt.close()
 
-plt.hist(edges, bins=np.arange(0, max(edges)+1), align='left', rwidth=0.8)
+plt.hist(edges, bins=np.arange(0, max(edges)+1), align='left', rwidth=0.8, color='lightcoral', alpha=0.6)
 plt.title("Edges distribution")
 plt.xlabel("Number of edges")
-plt.savefig("Edges_distribution.png")
+plt.grid(True, axis='y', linestyle=':', linewidth=0.5)
+plt.savefig("Edges_distribution_"+dataname+".png")
 plt.close() 
 
-plt.hist(avg_degree, bins=15)
+plt.hist(avg_degree, bins=15, align='left', rwidth=0.8, color='lightcoral', alpha=0.6)
 plt.title("Average degree distribution")   
 plt.xlabel("Average degree")
-plt.savefig("Average_degree_distribution.png")
+plt.grid(True, axis='y', linestyle=':', linewidth=0.5)
+plt.savefig("Average_degree_distribution_"+dataname+".png")
 plt.close()
 
-plt.hist(min_degree, bins=15)
+plt.hist(min_degree, bins=15, align='left', rwidth=0.8, color='lightcoral', alpha=0.6)
 plt.title("Minimum degree distribution")
 plt.xlabel("Minimum degree")
-plt.savefig("Minimum_degree_distribution.png")
+plt.grid(True, axis='y', linestyle=':', linewidth=0.5)
+plt.savefig("Minimum_degree_distribution_"+dataname+".png")
 plt.close()
 
-plt.hist(max_degree, bins=12)
+plt.hist(max_degree, bins=10, align='left', rwidth=0.8, color='lightcoral', alpha=0.6)
 plt.title("Maximum degree distribution")
 plt.xlabel("Maximum degree")
-plt.savefig("Maximum_degree_distribution.png")
+plt.grid(True, axis='y', linestyle=':', linewidth=0.5)
+plt.savefig("Maximum_degree_distribution_"+dataname+".png")
 plt.close()
 
-plt.hist(density, bins=12)
+plt.hist(density, bins=12, align='left', rwidth=0.8, color='lightcoral', alpha=0.6)
 plt.title("Density distribution")
 plt.xlabel("Density")
-plt.savefig("Density_distribution.png")
+plt.grid(True, axis='y', linestyle=':', linewidth=0.5)
+plt.savefig("Density_distribution_"+dataname+".png")
 plt.close() 

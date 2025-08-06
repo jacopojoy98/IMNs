@@ -90,7 +90,7 @@ def save(Latent_Dimension, model, trainset, testset, train_loss, test_loss, star
     # Plotting example of reconstruction
     data_to_plot = torch.stack([testset[i] for i in range(n*n)]).unsqueeze(0)
     recon, reg = model(data_to_plot.float().to(device))
-    plot = torch.hstack((recon.view(45*n,32*n),data_to_plot.view(45*n,32*n)))   
+    plot = torch.hstack((recon.view(42*n,32*n),data_to_plot.view(42*n,32*n)))   
     save_plots(plot.detach(),"reconstruction")
 
     torch.save(model.state_dict(), config.rae_model_file)
@@ -128,7 +128,7 @@ def train_raes(args,
         torch.save(torch.stack([traindata for traindata in testset]), "testset.pt")
         if valset:
             torch.save(torch.stack([traindata for traindata in valset]), "valset.pt")
-    if args.Datset == "TMD":
+    elif args.Datset == "TMD":
         trainset = dataset
         torch.save(torch.stack([traindata for traindata in dataset]), "trainset.pt")
         testset = Extract_Dataset(root_dir = args.data_directory+"_test")

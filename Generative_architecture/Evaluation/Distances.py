@@ -56,11 +56,11 @@ class MyTasks(Distances):
         _M = 0.5 * (_P + _Q)
         return 0.5 * (entropy(_P, _M) + entropy(_Q, _M))
 
-    @Distances.Graph_functions
-    def Laplacian_spectrum_distance(a,b):
-        a_ = a.to_undirected()
-        b_ = b.to_undirected()
-        return NRSE((nx.linalg.laplacian_spectrum(a_, weight=None)).tolist(), nx.linalg.laplacian_spectrum(b_, weight=None).tolist())
+    # @Distances.Graph_functions
+    # def Laplacian_spectrum_distance(a,b):
+    #     a_ = a.to_undirected()
+    #     b_ = b.to_undirected()
+    #     return NRSE((nx.linalg.laplacian_spectrum(a_, weight=None)).tolist(), nx.linalg.laplacian_spectrum(b_, weight=None).tolist())
 
     @Distances.Graph_functions
     def Centrality_distance(a,b):

@@ -13,9 +13,6 @@ IMG_SIZE            = 32
 BATCH_SIZE          = 8
 DATA_DIRECTORY      = "/home/jcolombini/Purpose/Labeler/Data"
 
-EPOCHS              = (5000, 5000, 300)
-LEARNING_RATE       = (1e-4, 2e-4, 1e-4)
-ALPHA               = 3e-4
 
 RUN_NAME            = datetime.now().strftime('%Y-%m-%d-%H-%M')
 
@@ -39,7 +36,7 @@ SAMPLE_INTERVAL     = 400
 wgan_model_file     = "model_wgan.pt"
 
 ## NF parameters
-NF_EPOCHS           = 300
+NF_EPOCHS           = 600
 NF_LR               = 1e-4
 HIDDEN_FLOW_DIM1    = 32
 HIDDEN_FLOW_DIM2    = 32
@@ -62,11 +59,12 @@ class RunParameters:
     Batch_size: int = BATCH_SIZE
     Datset : str = DATASET
     Num_classes : int = NUMBER_OF_CLASSES
+    Img_size : int = IMG_SIZE
 
     RAE: bool = 1
     Epochs_Rae: int = RAE_EPOCHS
     Learning_rate_Rae: tuple = RAE_LR
-    Alpha: float = ALPHA
+    Alpha: float = RAE_ALPHA
 
     WGAN: bool = 1
     Epochs_Wgan: int = WGAN_EPOCHS
