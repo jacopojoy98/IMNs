@@ -199,6 +199,6 @@ def dotheeval(name):
 
 if __name__ == "__main__":
     r_dir = "/home/jcolombini/Purpose/Labeler/Results/Generative_results"
-    name = os.path.join(r_dir, "2025-08-01-15-14")
+    name = os.path.join(r_dir, "2025-08-07-11-23")
     dotheeval(name)
             # dotheeval(name+"_"+str(p)+"_"+str(s))

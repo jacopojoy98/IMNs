@@ -110,8 +110,6 @@ def plot(name):
     Graph_functions = Distances.Matrix_functions_tasks
     function_names = [f.__name__ for f in Matrix_functions + Graph_functions]
     function_names += ["MMD","KID","FID","Precision","Recall","Density","Coverage","F1_PR"]
-    # function_names.append('GIN')
-    # function_names.remove('Laplacian_spectrum_distance')
     methods = ["NF", "wgan", "rae"]
     total = []
     EPOCHS = 0
@@ -201,7 +199,6 @@ if __name__ == "__main__":
     Res_dir = "/home/jcolombini/Purpose/Labeler/Results/Generative_results"
     experiments = os.listdir(Res_dir)
     for j, experiment in enumerate(experiments):
-        experiment = "2025-08-01-15-14"
         dir = os.path.join(Res_dir, experiment)
         plot(dir)
     # pass

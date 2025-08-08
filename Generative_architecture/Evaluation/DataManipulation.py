@@ -70,6 +70,10 @@ def Load_graphs(path, quantity):   ### Spostare il load fuori per maggiore effic
     if quantity>len(matrices): quantity=len(matrices)
     for index in range(quantity):
         matrix = matrices[index]
+        if isinstance(matrix, torch.Tensor):
+            matrix = matrix.detach().numpy()
+        if np.isnan(matrix).any():
+            continue
         graphs.append(matrix)
     return graphs
 

@@ -180,8 +180,8 @@ def gnn(args):
                 Recalls.append(Recall)
                 Precisions.append(Precision)
 
-                print(f"epoch: {epoch}\t- loss:  {loss_sum/len(train)} \n         \t- tloss: {testloss_sum/len(test)} \n         \t- accuracy: {Accuracy}\
-                       \n         \t- Recall: {np.mean(Recall)} \n         \t- Precision: {np.mean(Precision)}")
+                print(f"epoch: {epoch}\t- loss:  {loss_sum/len(train)} \n perc:{percentage}   \t- tloss: {testloss_sum/len(test)} \n fold:{fold}   \t- accuracy: {Accuracy}\
+                       \n         \t- Recall: {np.mean(Recall)} \n         \t- Precision: {np.mean(Precision)}", end = "\r")
 
             plot(losses, "trainlosses", percentage, savedir)
             plot(testlosses, "testlosses", percentage, savedir)

@@ -10,7 +10,7 @@ class RunParameters:
     
     savedir: str = datetime.now().strftime('%Y-%m-%d-%H-%M')
     
-    Num_classes: int = 6       #The number of classes for the foldinn of the synthetic dataset
+    Num_classes: int = 10       #The number of classes for the foldinn of the synthetic dataset
 
     Epochs: int = 700
     LR: float = 1e-4

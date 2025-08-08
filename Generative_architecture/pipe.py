@@ -30,9 +30,8 @@ def train_models(args):
     return None
 
 args = RunParameters()
-args.name = os.path.join(RESULTS_DIRECTORY, "2025-08-06-11-59")
-args.RAE = False
-train_models(args)
-Syth(args, 4000)
+args.name = os.path.join(RESULTS_DIRECTORY, "2025-08-07-11-23")
+# train_models(args)
+# Syth(args, 4000)
 Analisis.Evaluate(args.name)
 Plotting.plot(args.name)

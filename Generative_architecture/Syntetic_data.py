@@ -27,7 +27,7 @@ def Generate_Data_rae(rae_model, size, Latent_dimension, args):
     z = Variable(torch.FloatTensor(
                     np.random.normal(0, 1, (size, Latent_dimension))
                     ))
-    data = rae_model.decode(z).view((size,args.Img_size+args.Num_classes,args.Img_size))
+    data = rae_model.decode(z).view((size,42,32))
     if args.clean_data :
         data = clean_data(data)
     return data
@@ -37,7 +37,7 @@ def Generate_Data_NF(rae_model, NF_model, size, Latent_dimension, args):
     z = Variable(torch.FloatTensor(
                     np.random.normal(0, 1, (size, Latent_dimension))
                     ))
-    data = rae_model.decode(NF_model.forward(z).detach()).view((size,args.Img_size+args.Num_classes,args.Img_size))
+    data = rae_model.decode(NF_model.forward(z).detach()).view((size,42,32))
     if args.clean_data:
         data = clean_data(data)
     return data

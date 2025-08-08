@@ -12,9 +12,9 @@ def Load(file, Num_classes):
     for matrix in matrices:
         matrix = matrix.detach().cpu().numpy()
         NN = Number_of_nodes_of_graph_from_matrix(matrix)  ### Modificare su torch.quantile e usare torch invece che numpy
-        purpose = np.argmax(matrix[:13], axis=0)[:NN]       #  torch.quantile(tensor, 0.9, "linear")
+        purpose = np.argmax(matrix[:10], axis=0)[:NN]       #  torch.quantile(tensor, 0.9, "linear")
         purpose = [min(p, Num_classes - 1) for p in purpose]
-        Omega = matrix[13:13+NN,:NN]
+        Omega = matrix[10:10+NN,:NN]
         threshold = np.percentile(Omega, 90) / 2
         Omega[Omega<threshold] = 0
         out.append((purpose, Omega))

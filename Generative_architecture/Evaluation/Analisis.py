@@ -74,7 +74,7 @@ def Evaluate(name):
     ## proprietà stesse
 
     for Latent_space in [10,20,30,40,50]:       
-        for method in ["wgan","rae","NF"]:
+        for method in ["NF","wgan","rae"]:
             final_results = dict([(function_names[j],[]) for j in range(num_functions)])
             iter = "data_"+method
             path_to_generated = os.path.join(str(Latent_space), iter+".pt")
@@ -88,9 +88,7 @@ def Evaluate(name):
                     results_of_group = []
                     for k, Group_of_size in enumerate(Group):
                         results_of_size = []
-                        for (a,b) in  Group_of_size:
-                            Matrix_a = a.detach().numpy()
-                            Matrix_b = b.detach().numpy()
+                        for (Matrix_a,Matrix_b) in  Group_of_size:
                             _results = Evaluate_functions(Matrix_a, Matrix_b, Matrix_functions, Graph_functions)
                             results_of_size.append(_results)
                         results_of_group.append(results_of_size)
@@ -116,9 +114,7 @@ def Evaluate(name):
                 results_of_group = []
                 for k, Group_of_size in enumerate(Group):
                     results_of_size = []
-                    for (a,b) in  Group_of_size:
-                        Matrix_a = a.detach().numpy()
-                        Matrix_b = b.detach().numpy()
+                    for (Matrix_a,Matrix_b) in  Group_of_size:
                         results = Evaluate_functions (Matrix_a, Matrix_b, Matrix_functions, Graph_functions)
                         results_of_size.append(results)
                     results_of_group.append(results_of_size)

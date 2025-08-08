@@ -11,13 +11,13 @@ def plot_to_DBG_for_easy_inspection(exp, method):
         method = method[0]
     else: 
         LD = 0
-    n =1
+    n=6
     if LD:
         data = torch.load(os.path.join(LD,"data_"+method+".pt"), weights_only=False, map_location=torch.device('cpu'))
     else:
         data = torch.load(os.path.join("ETE","data_"+method+".pt"), weights_only=False, map_location=torch.device('cpu'))
     
-    data_to_plot = torch.stack([data[i] for i in range(n*n)]).view(45*n,32*n).detach().numpy()
+    data_to_plot = torch.stack([data[i] for i in range(n*n)]).view(42*n,32*n).detach().numpy()
     plt.imshow(data_to_plot, cmap="gray")
 
     dst = os.path.join(savedir,exp)
@@ -43,7 +43,7 @@ def exp_plot_to_dbg(exp):
 
 dir = "/home/jcolombini/Purpose/Labeler/Results/Generative_results"
 savedir = "/home/jcolombini/Purpose/Labeler/DBG/IMG/INSPECTION"
-exp_plot_to_dbg("2025-06-22-10-36")
+exp_plot_to_dbg("2025-08-06-11-59")
 exit()
 for exp in os.listdir(dir):
     exp_plot_to_dbg(exp)

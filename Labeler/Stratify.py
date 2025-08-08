@@ -38,7 +38,7 @@ def stratify(args):
         fold = list(set([collective_r_groups[i] for i in b[1] ]))
         torch.save([DATA_r[b] for b in fold], saving_directory+"/stratum-"+str(t)+"real_"+str(args.Num_classes)+".pt")
     
-    distrib = dict([(i,collective_labels.count(i)/len(collective_labels)) for i in range(13)])
+    distrib = dict([(i,collective_labels.count(i)/len(collective_labels)) for i in range(args.Num_classes)])
 
     generated_data_groupings = [{"group":j, "label": a} for j,Data in enumerate(DATA_g) for a in Data[0] ]
     for j, DATA in enumerate(DATA_g):

@@ -6,8 +6,8 @@ import os
 from datetime import datetime
 
 args = RunParameters()
-for N in [2, 3, 6, 13]:
-    args.name = "2025-08-01-12-25"
+for N in [10,5,3,2]:
+    args.name = "2025-08-06-11-59"
     args.Num_classes = N
     args.Num_labels = N
     args.savedir = datetime.now().strftime('%Y-%m-%d-%H-%M')
