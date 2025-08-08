@@ -112,9 +112,6 @@ def plot(name):
     function_names += ["MMD","KID","FID","Precision","Recall","Density","Coverage","F1_PR"]
     methods = ["NF", "wgan", "rae"]
     total = []
-    EPOCHS = 0
-    LEARNING_RATE = 0
-#    EPOCHS, LEARNING_RATE = read_config(name)
     for method in methods:
         L_D = []
         for Latent_dimension in [10,20,30,40,50]:      ######
@@ -123,7 +120,6 @@ def plot(name):
             with open(str(Latent_dimension)+'/was_results_'+method+'.json', 'r') as file:
                 data = json.load(file)  
             data = load_data(data, function_names)
-            # data = dict([(key, [np.mean([dst_to_sim(a) for a in data[key]]),np.sqrt(np.var([dst_to_sim(a) for a in data[key]]))]) for key in function_names])
             L_D.append(data)
         total.append(L_D) 
         
@@ -133,7 +129,6 @@ def plot(name):
             data = json.load(file)   
                             ###############
             data = load_data(data, function_names)
-            # data = dict([(key, [np.mean([dst_to_sim(a) for a in data[key]]),np.sqrt(np.var([dst_to_sim(a) for a in data[key]]))]) for key in function_names])
         L_D.append(data)
         total.append(L_D) 
 
@@ -141,27 +136,16 @@ def plot(name):
     #    NF   [10{f1:[m,v],f2:[],f3:[],f4:[],f5:[]},20{},30{-},40{},50{}],
     #    wgan [10{},20{},30{},40{},50{}],
     #    rae  [10{},20{},30{},40{},50{}]
-    '''
-    idea, per aggiustare anche il plotting aggiungo intatno a total qui alla fine
-    wgan_ete
-    NF_ete
-    quindi faendo due append in puù alla fine
-    '''
     # ]
 
-    for function_name in function_names: #enumerate([plot_J,plot_F,plot_de, plot_den, plot_c]):
+    for function_name in function_names:
         NF =    [total[0][a][function_name] for a in range(len(total[0]))]
         wgan =  [total[1][a][function_name] for a in range(len(total[1]))]
         Rae =   [total[2][a][function_name] for a in range(len(total[2]))]
         Wgan_ete = [total[3][a][function_name] for a in range(len(total[3]))]
         NF_ete = [total[4][a][function_name] for a in range(len(total[4]))]
-        '''
-        qui aggiungo anche 
-        wgan_ete = []
-        NF_ete = []
-        '''
 
-        alle = [NF,wgan,Rae]
+        all = [NF,wgan,Rae]
         ete = [Wgan_ete,NF_ete]
 
         x = np.arange(7)  # the label locations
@@ -170,7 +154,7 @@ def plot(name):
         colo = ['red','black','blue']
         t=0
         offset = [-0.04, 0 , +0.04]
-        for t, serie in enumerate(alle):  
+        for t, serie in enumerate(all):  
             media =[a[0] for a in serie]
             errore = [a[1] for a in serie]  
             ax.errorbar(x_ax + offset[t], media, yerr=errore, ls = '-.', capsize=3, color = colo[t],markersize=15,marker='.' )
@@ -181,17 +165,15 @@ def plot(name):
             ax.errorbar(t+len(x_ax), media, yerr=errore, ls = '-.', capsize=3, color = colo[t],markersize=15,marker='.' )
         
         ax.set_title(function_name, fontweight='bold', fontsize="25")
-        ax.set_ylabel('Similarity (abs)', fontweight='bold', fontsize = "20")
+        ax.set_ylabel('Similarity', fontweight='bold', fontsize = "20")
         ax.set_xlabel('Latent dimension', fontweight='bold', fontsize = "20")
         ax.set_yticks(ax.get_yticks()[1:-1],[str(a//(0.01)/100) for a in ax.get_yticks()[1:-1]], fontsize = "15", fontweight='bold')
-        ax.set_xticks(x, [str(10),str(20),str(30),str(40),str(50),"Wgan_ete", "NF_ete"], fontsize = "15", fontweight='bold')
-        ax.legend(["NF","wgan","Rae"])
-        ax.text(0.3,ax.get_ylim()[0]+0.001, EPOCHS)
-        ax.text(2,ax.get_ylim()[0]+0.001, LEARNING_RATE)
+        ax.set_xticks(x, [str(10),str(20),str(30),str(40),str(50),"Wgan", "NF"], fontsize = "15", fontweight='bold')
+        ax.legend(["NF","Wgan","Rae"])
         s=2.65
         inces = (3*s,2*s)
         fig.set_size_inches(*inces) 
-        plt.savefig("was"+function_name+".png")
+        plt.savefig(function_name+".pdf")
         plt.close()
     return None
 
