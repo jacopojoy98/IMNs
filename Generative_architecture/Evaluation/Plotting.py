@@ -5,6 +5,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Evaluation.Distances import Distances
 import json
 
+plt.rcParams['font.family'] = 'serif'
+
 def dst_to_sim(x, sigma):
     return np.e**(-np.clip(x,-1,10000)/sigma)
 
@@ -164,7 +166,7 @@ def plot(name):
             errore = [a[1] for a in serie]  
             ax.errorbar(t+len(x_ax), media, yerr=errore, ls = '-.', capsize=3, color = colo[t],markersize=15,marker='.' )
         
-        ax.set_title(function_name, fontweight='bold', fontsize="25")
+        ax.set_title(function_name.replace("_distance",""), fontweight='bold', fontsize="25")
         ax.set_ylabel('Similarity', fontweight='bold', fontsize = "20")
         ax.set_xlabel('Latent dimension', fontweight='bold', fontsize = "20")
         ax.set_yticks(ax.get_yticks()[1:-1],[str(a//(0.01)/100) for a in ax.get_yticks()[1:-1]], fontsize = "15", fontweight='bold')
