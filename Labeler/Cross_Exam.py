@@ -41,9 +41,7 @@ def experiment(Results_dir):
 def folded_experiment(Experiment):
     Res_dir = "/home/jcolombini/Purpose/Labeler/Results/Labeler_results"
     Measures = ["Accuracy", "Precision", "Recall"]
-    percentage = 0
-    percentages = [0,10,20,30,40,50,60,70,80,90]
-    percentages = [0,20,40,60,80,100]
+    percentages = [0,20,40]
     os.chdir(os.path.join(Res_dir,Experiment))
     fig, ax = plt.subplots(1,3)
     for j, measure in enumerate(Measures):
@@ -80,6 +78,6 @@ def folded_experiment(Experiment):
 
 if __name__ == "__main__":
     # for experime in os.listdir("/home/jcolombini/Purpose/Labeler/Results/Labeler_results"):
-    experime="2025-08-03-00-33"
+    experime="2025-08-08-20-08"
     folded_experiment(experime)
     

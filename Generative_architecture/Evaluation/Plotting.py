@@ -171,11 +171,14 @@ def plot(name):
         ax.set_xlabel('Latent dimension', fontweight='bold', fontsize = "20")
         ax.set_yticks(ax.get_yticks()[1:-1],[str(a//(0.01)/100) for a in ax.get_yticks()[1:-1]], fontsize = "15", fontweight='bold')
         ax.set_xticks(x, [str(10),str(20),str(30),str(40),str(50),"Wgan", "NF"], fontsize = "15", fontweight='bold')
-        ax.legend(["NF","Wgan","Rae"])
+        # legend = ax.legend(["NF","Wgan","Rae"])
         s=2.65
         inces = (3*s,2*s)
         fig.set_size_inches(*inces) 
-        plt.savefig(function_name+".pdf")
+        if function_name in ["MMD","KID","FID","Precision","Recall","Density","Coverage","F1_PR"]:
+            plt.savefig("1"+function_name+".pdf")
+        else:
+            plt.savefig("0"+function_name+".pdf")
         plt.close()
     return None
 
